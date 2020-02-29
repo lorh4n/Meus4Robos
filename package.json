@@ -1,0 +1,20 @@
+{
+  "name": "Meus4Robos",
+  "version": "1.0.0",
+  "description": "Teste de implementação de Robos em JS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lorhan7/Meus4Robos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lorhan7/Meus4Robos/issues"
+  },
+  "homepage": "https://github.com/Lorhan7/Meus4Robos#readme"
+}
