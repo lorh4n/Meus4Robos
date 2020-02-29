@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Lorhan7/Meus4Robos/issues"
   },
-  "homepage": "https://github.com/Lorhan7/Meus4Robos#readme"
+  "homepage": "https://github.com/Lorhan7/Meus4Robos#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
 }
