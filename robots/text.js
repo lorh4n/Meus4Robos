@@ -1,69 +1,75 @@
-const algorithmia = require('algorithmia')
-const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey
-const sentenceBoundaryDetection = require('sbd')
+const algorithmia = require('algorithmia');
+const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey;
+const sentenceBoundaryDetection = require('sbd');
 
-const watsonApiKey = require('../credentials/watson-nlu.json').apikey
+const watsonApiKey = require('../credentials/watson-nlu.json').apikey;
 const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
 const { IamAuthenticator } = require('ibm-watson/auth');
 
 const nlu = new NaturalLanguageUnderstandingV1({
-    authenticator: new IamAuthenticator({ apikey: '_H6VHgAtQ0hdzVEv5Ze-R9Y_ggsstKNh4VsqKSYCxOaW' }),
-    version: '2018-04-05',
-    url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
+  authenticator: new IamAuthenticator({ apikey: watsonApiKey }),
+  version: '2018-04-05',
+  url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
 });
 
+const state = require('./state');
 
 
-async function robot(content) {
-  console.log('> [text-robot] Starting...')
+async function robot() {
+  const content = state.load();
+  console.log('> [text-robot] Starting...');
 
-  await fetchContentFromWikipedia(content)
-  sanitizeContent(content)
-  breakContentIntoSentences(content)
-  limitMaximumSentences(content)
-  await fetchKeywordsOfAllSentences(content)
+  await fetchContentFromWikipedia(content);
+  sanitizeContent(content);
+  breakContentIntoSentences(content);
+  limitMaximumSentences(content);
+  await fetchKeywordsOfAllSentences(content);
+
+  state.save(content);
 
 
   async function fetchContentFromWikipedia(content) {
-    console.log('> [text-robot] Fetching content from Wikipedia')
-    const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey)
-    const wikipediaAlgorithm = algorithmiaAuthenticated.algo('web/WikipediaParser/0.1.2')
-    const wikipediaResponse = await wikipediaAlgorithm.pipe(content.searchTerm)
-    const wikipediaContent = wikipediaResponse.get()
 
-    content.sourceContentOriginal = wikipediaContent.content
-    console.log('> [text-robot] Fetching done!')
+    console.log('> [text-robot] Fetching content from Wikipedia');
+
+    const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey);
+    const wikipediaAlgorithm = algorithmiaAuthenticated.algo('web/WikipediaParser/0.1.2');
+    const wikipediaResponse = await wikipediaAlgorithm.pipe(content.searchTerm);
+    const wikipediaContent = wikipediaResponse.get();
+
+    content.sourceContentOriginal = wikipediaContent.content;
+    console.log('> [text-robot] Fetching done!');
   }
 
   function sanitizeContent(content) {
-    const withoutBlankLinesAndMarkdown = removeBlankLinesAndMarkdown(content.sourceContentOriginal)
-    const withoutDatesInParentheses = removeDatesInParentheses(withoutBlankLinesAndMarkdown)
+    const withoutBlankLinesAndMarkdown = removeBlankLinesAndMarkdown(content.sourceContentOriginal);
+    const withoutDatesInParentheses = removeDatesInParentheses(withoutBlankLinesAndMarkdown);
 
-    content.sourceContentSanitized = withoutDatesInParentheses
+    content.sourceContentSanitized = withoutDatesInParentheses;
 
     function removeBlankLinesAndMarkdown(text) {
-      const allLines = text.split('\n')
+      const allLines = text.split('\n');
 
       const withoutBlankLinesAndMarkdown = allLines.filter((line) => {
         if (line.trim().length === 0 || line.trim().startsWith('=')) {
-          return false
+          return false;
         }
 
-        return true
+        return true;
       })
 
-      return withoutBlankLinesAndMarkdown.join(' ')
+      return withoutBlankLinesAndMarkdown.join(' ');
     }
   }
 
   function removeDatesInParentheses(text) {
-    return text.replace(/\((?:\([^()]*\)|[^()])*\)/gm, '').replace(/  /g,' ')
+    return text.replace(/\((?:\([^()]*\)|[^()])*\)/gm, '').replace(/  /g, ' ');
   }
 
   function breakContentIntoSentences(content) {
     content.sentences = []
 
-    const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSanitized)
+    const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSanitized);
     sentences.forEach((sentence) => {
       content.sentences.push({
         text: sentence,
@@ -74,18 +80,18 @@ async function robot(content) {
   }
 
   function limitMaximumSentences(content) {
-    content.sentences = content.sentences.slice(0, content.maximumSentences)
+    content.sentences = content.sentences.slice(0, content.maximumSentences);
   }
 
   async function fetchKeywordsOfAllSentences(content) {
-    console.log('> [text-robot] Starting to fetch keywords from Watson')
+    console.log('> [text-robot] Starting to fetch keywords from Watson');
 
     for (const sentence of content.sentences) {
-      console.log(`> [text-robot] Sentence: "${sentence.text}"`)
+      console.log(`> [text-robot] Sentence: "${sentence.text}"`);
 
-      sentence.keywords = await fetchWatsonAndReturnKeywords(sentence.text)
+      sentence.keywords = await fetchWatsonAndReturnKeywords(sentence.text);
 
-      console.log(`> [text-robot] Keywords: ${sentence.keywords.join(', ')}\n`)
+      console.log(`> [text-robot] Keywords: ${sentence.keywords.join(', ')}\n`);
     }
   }
 
@@ -98,19 +104,19 @@ async function robot(content) {
         }
       }, (error, response) => {
         if (error) {
-          reject(error)
-          return
+          reject(error);
+          return;
         }
 
         const keywords = response.result.keywords.map((keyword) => {
           return keyword.text
         })
 
-        resolve(keywords)
+        resolve(keywords);
       })
     })
   }
 
 }
 
-module.exports = robot
+module.exports = robot;
