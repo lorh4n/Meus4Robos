@@ -39,7 +39,6 @@ async function robot() {
     const wikipediaResponse = await wikipediaAlgorithm.pipe(content.searchTerm);
     const wikipediaContent = wikipediaResponse.get();
 
-    console.log(wikipediaContent);
     content.sourceContentOriginal = wikipediaContent.content;
     console.log('> [text-robot] Fetching done!');
   }
