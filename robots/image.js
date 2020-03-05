@@ -7,7 +7,7 @@ async function robot() {
   const content = state.load();
 
   const response = await customSearch.cse.list({
-    auth: googleSearchCredentials.apikey,
+    auth: googleSearchCredentials.apiKey,
     cx: googleSearchCredentials.searchEngineId,
     q: 'Michael Jackson',
     searchType: 'image',
