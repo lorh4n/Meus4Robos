@@ -1,8 +1,10 @@
 const algorithmia = require('algorithmia');
-const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey;
 const sentenceBoundaryDetection = require('sbd');
 
+const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey;
 const watsonApiKey = require('../credentials/watson-nlu.json').apikey;
+
+
 const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
 const { IamAuthenticator } = require('ibm-watson/auth');
 
@@ -37,6 +39,7 @@ async function robot() {
     const wikipediaResponse = await wikipediaAlgorithm.pipe(content.searchTerm);
     const wikipediaContent = wikipediaResponse.get();
 
+    console.log(wikipediaContent);
     content.sourceContentOriginal = wikipediaContent.content;
     console.log('> [text-robot] Fetching done!');
   }

@@ -11,7 +11,6 @@ async function start() {
     await robots.text();
 
     const content = robots.state.load()
-    console.dir(content, { deth: null })
 }
 
 start();
