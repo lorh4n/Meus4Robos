@@ -13,11 +13,11 @@ async function robot() {
 
   async function fetchImagesOfAllSentences(content) {
     for (const sentence of content.sentences) {
+
       const query = `${content.searchTerm} ${sentence.keywords[0]}`;
       sentence.images = await fetchGoogleAndReturnImagesLinks(query);
 
       sentence.googleSearchQuery = query;
-
     }
   }
 
@@ -36,8 +36,6 @@ async function robot() {
 
     return imagesUrl;
   }
-
-
 
 }
 module.exports = robot;
