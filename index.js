@@ -12,9 +12,8 @@ async function start() {
     //await robots.text();
     await robots.image();
 
-    const content = robots.state.load();
-
-    console.dir(content, { depth: null });
+    // const content = robots.state.load();
+    // console.dir(content, { depth: null });
 
 }
 
