@@ -2,17 +2,10 @@ const readline = require('readline-sync');
 const state = require('./state')
 
 function robot() {
-  const content = {
-    maximumSentences: 7
-  };
+  const content = state.load();
 
-  content.searchTerm = askAndReturnSearchTerm();
   content.prefix = askAndReturnPrefix();
   state.save(content);
-
-  function askAndReturnSearchTerm() {
-    return readline.question('Para a pesquisa: ');
-  }
 
   function askAndReturnPrefix() {
 

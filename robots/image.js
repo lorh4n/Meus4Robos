@@ -9,7 +9,7 @@ async function robot() {
 
   // await fechtImagesOfAllSentences(content);
   await downloadAllImages(content);
-  // state.save(content);
+  state.save(content);
 
   async function fechtImagesOfAllSentences(content){
     for( const sentence of content.sentences){
