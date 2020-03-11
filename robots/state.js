@@ -1,5 +1,5 @@
 const fs = require('fs');
-const contentFilePath = './content.json';
+const contentFilePath = '../content';
 
 
 function save(content) {

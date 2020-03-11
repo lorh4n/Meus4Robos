@@ -5,6 +5,6 @@ const app = express();
 app.use(express.json());
 
 //Rota
-app.use('/api', require("./src/routes"));
+app.use('/', require("./src/routes"));
 
-app.listen(3001);
+app.listen(4333);
