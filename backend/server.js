@@ -1,8 +1,10 @@
 const express = require('express');
+
+//Inciando App
 const app = express();
+app.use(express.json());
 
-app.get('/', (req, res)=>{
+//Rota
+app.use('/api', require("./src/routes"));
 
-});
-
-app.listen(3452);
+app.listen(3001);
