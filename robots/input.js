@@ -1,8 +1,12 @@
 const readline = require('readline-sync');
-const state = require('./state')
+const state = require('./state');
 
 function robot() {
-  const content = state.load();
+  const content = {
+    maximumSentences: 7
+  }
+
+  content.searchTerm = 'Ana paula'
 
   content.prefix = askAndReturnPrefix();
   state.save(content);

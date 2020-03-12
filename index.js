@@ -1,6 +1,7 @@
 const robots = {
+    sexist: require('./robots/sexist'),
     input: require('./robots/input'),
-    // text: require('./robots/text'),
+    text: require('./robots/text'),
     state: require('./robots/state'),
     // image: require('./robots/image')
 
@@ -9,8 +10,9 @@ const robots = {
 async function start() {
 
     robots.input();
-    await robots.text();
-    await robots.image();
+    await robots.sexist();
+    // await robots.text();
+    // await robots.image();
 
     const content = robots.state.load();
     console.dir(content, { depth: null });
